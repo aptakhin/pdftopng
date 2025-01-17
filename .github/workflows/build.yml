@@ -73,6 +73,7 @@ jobs:
         if: runner.os != 'Windows'
         continue-on-error: true
         run: |
+          sudo softwareupdate --install-rosetta --agree-to-license
           python -m pip --disable-pip-version-check install cibuildwheel>=2.22.0
           python -m cibuildwheel --output-dir wheelhouse
 
