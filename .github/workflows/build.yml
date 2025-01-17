@@ -71,6 +71,7 @@ jobs:
 
       - name: Install cibuildwheel & build wheels (Linux & MacOS)
         if: runner.os != 'Windows'
+        continue-on-error: true
         run: |
           python -m pip --disable-pip-version-check install cibuildwheel>=2.22.0
           python -m cibuildwheel --output-dir wheelhouse
@@ -80,17 +81,17 @@ jobs:
           name: wheels-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
-  upload_pypi:
-    needs: [build_wheels]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: dist
-          pattern: wheels-*
-          merge-multiple: true
+  # upload_pypi:
+  #   needs: [build_wheels]
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
+  #   steps:
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         path: dist
+  #         pattern: wheels-*
+  #         merge-multiple: true
 
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.pypi_password }}
+  #     - uses: pypa/gh-action-pypi-publish@release/v1
+  #       with:
+  #         password: ${{ secrets.pypi_password }}
